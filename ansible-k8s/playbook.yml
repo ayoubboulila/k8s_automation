@@ -1,0 +1,16 @@
+---
+- hosts: all
+  vars_files:
+    - ./vars/vars.yml
+  pre_tasks:
+    - name: host preparation
+      include: ./includes/host-prep.yml
+  roles:
+    - docker
+  tasks:
+    - ping: ~
+    - name: print test 
+      debug:
+        msg: "test message"
+      tags:
+        - test

@@ -1,0 +1,57 @@
+---
+- name: Install required system packages
+  apt: name={{ item }} state=latest update_cache=yes
+  loop: [ 'apt-transport-https', 'ca-certificates', 'curl', 'software-properties-common', 'gnupg-agent']
+  tags:
+    - deploy
+- name: Add Docker GPG apt Key
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+  tags:
+    - deploy
+
+- name: Add Docker Repository
+  apt_repository:
+    repo: deb https://download.docker.com/linux/ubuntu xenial stable
+    state: present
+  tags:
+    - deploy
+- name: create docker config dir 
+  file: 
+    path: /etc/docker 
+    state: directory
+    recurse: yes
+  tags:
+    - deploy
+    - deploy_docker
+- name: prepare docker daemon config 
+  template:
+    src: ./templates/docker_daemon.j2
+    dest: /etc/docker/daemon.json 
+    owner: ubuntu
+    group: docker 
+    mode: '0644'
+  tags:
+    - deploy
+    - deploy_docker
+  register: docker_conf 
+  notify:
+    - restart docker
+- debug:
+    var: docker_conf
+  tags:
+    - debug
+- name: Update apt and install docker-ce
+  apt: update_cache=yes name=docker-ce state=latest
+  tags:
+    - deploy
+    - deploy_docker
+  register: install_docker
+  notify: 
+    - restart docker 
+
+- debug:
+    var: install_docker
+  tags:
+    - debug 

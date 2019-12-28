@@ -1,0 +1,7 @@
+---
+- name: update host
+  apt:
+    update_cache: true 
+  become: true
+  tags:
+    - prep

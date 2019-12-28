@@ -1,0 +1,10 @@
+[kube-master]
+172.17.129.179 ansible_ssh_user=ubuntu ansible_ssh_private_key_file=/home/ubuntu/Desktop/devops/openstack-infra/k8s_id_rsa
+
+[kube-node]
+172.17.129.180
+172.17.129.183
+
+[all:vars]
+ansible_ssh_private_key_file = /home/ubuntu/Desktop/devops/openstack-infra/k8s_id_rsa
+ansible_ssh_user = ubuntu

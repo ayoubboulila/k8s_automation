@@ -1,0 +1,12 @@
+---
+- name: restart docker service
+  become: true 
+  service: 
+    name: docker 
+    state: restarted
+  listen: "restart docker"
+  register: docker_restart
+- debug:
+    msg: "docker service {{ docker_restart }}"
+  tags:
+    - debug
